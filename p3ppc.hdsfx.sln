@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p3ppc.hdsfx", "p3ppc.hdsfx\p3ppc.hdsfx.csproj", "{D5667E81-C814-452A-A7AE-00863A623B6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CriFs.V2.Hook.Interfaces", "Submodules\CriFs.V2.Hook.ReloadedII\Interfaces\CriFs.V2.Hook.Interfaces\CriFs.V2.Hook.Interfaces.csproj", "{EBBFBEA5-E8C1-427E-8593-34D9033766B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5667E81-C814-452A-A7AE-00863A623B6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5667E81-C814-452A-A7AE-00863A623B6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5667E81-C814-452A-A7AE-00863A623B6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5667E81-C814-452A-A7AE-00863A623B6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBBFBEA5-E8C1-427E-8593-34D9033766B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBBFBEA5-E8C1-427E-8593-34D9033766B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBBFBEA5-E8C1-427E-8593-34D9033766B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBBFBEA5-E8C1-427E-8593-34D9033766B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A757BCC-81C2-4D48-BB37-F08BE2A549B6}
+	EndGlobalSection
+EndGlobal
