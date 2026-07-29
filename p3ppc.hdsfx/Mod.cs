@@ -10,6 +10,7 @@ using System.Diagnostics;
 using IReloadedHooks = Reloaded.Hooks.ReloadedII.Interfaces.IReloadedHooks;
 using CriFs.V2.Hook.Interfaces;
 using Reloaded.Universal.Localisation.Framework.Interfaces;
+using System.Drawing;
 
 namespace p3ppc.hdsfx
 {
@@ -51,25 +52,12 @@ namespace p3ppc.hdsfx
 
         private IMemory _memory;
 
-        private IAsmHook _setInheritanceHook;
-        private IAsmHook _fusionResultsConfirmHook;
-        private IAsmHook _fusionResultsHook;
-        private IAsmHook _personaMenuDisplayHook;
-        private IAsmHook _addInheritedSkillsHook;
-        private IAsmHook _skillHelpDescriptionHook;
-        private IAsmHook _resultsMenuOpeningHook;
-        private IAsmHook _specialResultsMenuOpeningHook;
-        private IAsmHook _fusionResultsInitPersonaHook;
-        private IAsmHook _renderButtonPromptTextHook;
-        private IAsmHook _renderButtonPromptTextJapaneseHook;
-        private IAsmHook _renderButtonPromptJapaneseHook;
-        private IAsmHook _renderButtonPromptHook;
+        private IAsmHook _setSoundLimitHook;
 
-        private bool* _inInheritanceMenu;
-        private nint _inInheritanceMenuPtr;
+        private IReverseWrapper<SoundLimitDelegate> _startSoundLimitReverseWrapper;
 
-        private bool* _allowFusionConfirmation;
-        private nint _allowFusionConfirmationPtr;
+        private bool* _inSoundLimit;
+        private nint _inSoundLimitPtr;
 
         private TimeSpan movementDelay = TimeSpan.FromMilliseconds(100);
         private TimeSpan movementInitialDelay = TimeSpan.FromMilliseconds(230);
@@ -116,15 +104,8 @@ namespace p3ppc.hdsfx
                 _language = Language.English;
             }
 
-            _allowFusionConfirmation = (bool*)_memory.Allocate(4);
-            _allowFusionConfirmationPtr = _hooks.Utilities.WritePointer((nint)_allowFusionConfirmation);
-            Utils.LogDebug($"Allocated allowFusionConfirmation to 0x{(nint)_allowFusionConfirmation:X}");
-            Utils.LogDebug($"Allocated allowFusionConfirmationPtr to 0x{_allowFusionConfirmationPtr:X}");
-
-            _inInheritanceMenu = (bool*)_memory.Allocate(4);
-            _inInheritanceMenuPtr = _hooks.Utilities.WritePointer((nint)_inInheritanceMenu);
-            Utils.LogDebug($"Allocated inInheritanceMenu to 0x{(nint)_inInheritanceMenu:X}");
-            Utils.LogDebug($"Allocated inInheritanceMenuPtr to 0x{_inInheritanceMenuPtr:X}");
+            _inSoundLimit = (bool*)_memory.Allocate(4);
+            _inSoundLimitPtr = _hooks.Utilities.WritePointer((nint)_inSoundLimit);
 
             startupScanner.AddMainModuleScan("66 83 FF 10 7C 90 48 8B 4C 24 ?? 48 33 CC", result =>
                 {
@@ -133,17 +114,31 @@ namespace p3ppc.hdsfx
                     {
                         "use64",
                         "push rax\npush rcx\npush rdx\npush r8\npush r9\npush r11",
-                        "cmp di, 0xC8",
+                        $"{_hooks.Utilities.GetAbsoluteCallMnemonics(SoundLimit, out _startSoundLimitReverseWrapper)}",
                         "cmp [rbx], ebp",
                         "shr esi, 1",
                         "inc di",
                         "add rbx, 0x10",
                         "pop r11\npop r9\npop r8\npop rdx\npop rcx\npop rax"
                     };
-                    _setInheritanceHook = _hooks.CreateAsmHook(function, result.Offset + Utils.BaseAddress, AsmHookBehaviour.ExecuteFirst).Activate();
+                    _setSoundLimitHook = _hooks.CreateAsmHook(function, result.Offset + Utils.BaseAddress, AsmHookBehaviour.ExecuteFirst).Activate();
                 });
 
         }
+
+        private void SoundLimit(int param1)
+        {
+            for (int i = 0; i < 16; ++i)
+            {
+                if (i > 16 && i < 200)
+                {
+                    *_inSoundLimit = true;
+                }
+            }
+        }
+
+        [Function(CallingConventions.Microsoft)]
+        private delegate void SoundLimitDelegate(int param1);
 
         #region Standard Overrides
         public override void ConfigurationUpdated(Config configuration)
